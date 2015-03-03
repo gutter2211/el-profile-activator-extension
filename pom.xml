@@ -3,7 +3,8 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.redhat.jboss.maven</groupId>
     <artifactId>el-profile-activator-extension</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    
+    <version>1.0.0</version>
     <name>El Profile Activator Maven Extension</name>
     <dependencies>
         <dependency>
@@ -42,6 +43,12 @@
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <classifier>comdirect</classifier>
                 </configuration>
             </plugin>
         </plugins>
