@@ -1,6 +1,8 @@
 EL Profile Activation Maven Extension
 -------------------------------------
 
+This source was copied from https://github.com/kpiwko/el-profile-activator-extension
+
 Allows profile to be activated using an expression language expression. Currently supports MVEL2 only. 
 Extension hijacks property activation and tries to evaluate mvel expression first, if this is not successful
 it passes control to original property activator.
@@ -41,3 +43,39 @@ A few examples (an MVEL cheatsheet)
 		isdef foo &amp;&amp; foo.startsWith("abc")) || (isdef baz &amp;&amp; baz.contains("xyz"))
 
 Complete MVEL reference guide is available at http://mvel.codehaus.org/Language+Guide+for+2.0		
+
+
+Erweiterung durch Comdirect
+---------------------------
+
+Als Variablen für die EL-Validierung stehen im Original-Code die System-Properties und Userdefined-Properties zur Verfügung. Leider 
+stehen keine Properties zur Verfügung, die in Poms oder gar Child-Poms definiert, wie z.B. 
+
+    <properties>
+        <anyprop>anyval<anyprop>
+    </properties>
+    
+Der Grund liegt darin begründet, dass die Entscheidung über die Aktivierung eines Profiles getroffen werden muss, *bevor* die Pom fertig 
+aufgebaut ist, da in einem Profile ja Projekt-Properties noch verändert werden könnten.
+
+Die Properties werden in der Commandline mit 
+
+    -Danyprop=anyval
+
+definiert, System-Properties sind die Umgebungsvariablen des Systems. 
+
+Die Idee dieser Erweiterung besteht darin, Konfigurations-Code in Child-Poms zu sparen und dort nur gewisse Eigenschaften zu definieren, 
+die ein Profile aktivieren. Die Konfiguration für ein Profile wird dann einmalig in der Parent-Pom vorgenommen.
+
+Diese Erweiterung sucht nach einem Property-File *profileactivation.properties* im Root-Verzeichnis eines Projektes und stellt alle dort 
+definierten Variablen ebenfalls für die Expression-Language Evaluierung zur Verfügung. Die Properties überschreiben sich in der folgenden Reihenfolge:
+
+* Properties aus dem Property-File *profileactivation.properties*
+* System Properties
+* Userdefined Properties
+
+
+
+
+
+
