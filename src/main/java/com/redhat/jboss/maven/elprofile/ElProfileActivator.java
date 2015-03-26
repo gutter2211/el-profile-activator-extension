@@ -78,8 +78,13 @@ public class ElProfileActivator implements ProfileActivator {
     }
 
     private boolean evaluateMvel(String expression, ProfileActivationContext context) {
+    	
         if (expression == null || expression.length() == 0) {
             return false;
+        }
+        
+        if(context==null || context.getProjectDirectory()==null || !context.getProjectDirectory().exists()) {
+        	return false;
         }
 
         try {
