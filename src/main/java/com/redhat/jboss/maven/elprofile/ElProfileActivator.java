@@ -77,6 +77,30 @@ public class ElProfileActivator implements ProfileActivator {
         return result ? true : new PropertyProfileActivator().isActive(profile, context, problemCollector);
     }
 
+    public boolean presentInConfig(Profile profile, ProfileActivationContext context, ModelProblemCollector problemCollector) {
+        Activation activation = profile.getActivation();
+
+        boolean result = false;
+
+        if (activation != null) {
+            ActivationProperty property = activation.getProperty();
+
+            if (property != null) {
+                String name = property.getName();
+
+                if (name != null && MVEL_SCRIPT_PROPERTY_NAME.equals(name)) {
+                    String value = property.getValue();
+                    logger.debug("Evaluating following MVEL expression: " + value);
+                    result = evaluateMvel(value, context);
+                    logger.debug("Evaluated MVEL expression: " + value + " as " + result);
+                }
+            }
+        }
+
+        // call original implementation if mvel script was not valid/false
+        return result ? true : new PropertyProfileActivator().isActive(profile, context, problemCollector);
+    }
+
     private boolean evaluateMvel(String expression, ProfileActivationContext context) {
     	
         if (expression == null || expression.length() == 0) {
